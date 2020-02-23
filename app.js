@@ -133,22 +133,53 @@ async function addIntern() {
       {
         type: "input",
         message: "What is the Intern's name?",
-        name: "internName"
+        name: "internName",
+        validate: input => {
+          if (input !== "" && input != null) {
+            return true;
+          } else {
+            return "Intern's name cannot be blank";
+          }
+        }
       },
       {
         type: "input",
         message: "What is the Intern's ID number?",
-        name: "internId"
+        name: "internId",
+        validate: input => {
+          if (input !== "" && !isNaN(input)) {
+            return true;
+          } else {
+            return "Please enter a number";
+          }
+        }
       },
       {
         type: "input",
         message: "What is the Intern's email?",
-        name: "internEmail"
+        name: "internEmail",
+        validate: input => {
+          if (
+            input !== "" &&
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)
+          ) {
+            return true;
+          } else {
+            return "Please enter a valid email address";
+          }
+        }
       },
       {
         type: "input",
         message: "What it the Intern's school?",
-        name: "internSchool"
+        name: "internSchool",
+        validate: input => {
+          if (input !== "" && input != null) {
+            return true;
+          } else {
+            return "School's name cannot be blank";
+          }
+        }
       }
     ]);
     const newIntern = new Intern(
