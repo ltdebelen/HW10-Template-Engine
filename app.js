@@ -94,22 +94,53 @@ async function addEngineer() {
       {
         type: "input",
         message: "What is the Engineer's name?",
-        name: "engineerName"
+        name: "engineerName",
+        validate: input => {
+          if (input !== "" && input != null) {
+            return true;
+          } else {
+            return "Engineer's name cannot be blank";
+          }
+        }
       },
       {
         type: "input",
         message: "What is the Engineer's ID number?",
-        name: "engineerId"
+        name: "engineerId",
+        validate: input => {
+          if (input !== "" && !isNaN(input)) {
+            return true;
+          } else {
+            return "Please enter a number";
+          }
+        }
       },
       {
         type: "input",
         message: "What is the Engineer's email?",
-        name: "engineerEmail"
+        name: "engineerEmail",
+        validate: input => {
+          if (
+            input !== "" &&
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)
+          ) {
+            return true;
+          } else {
+            return "Please enter a valid email address";
+          }
+        }
       },
       {
         type: "input",
         message: "What it the Engineer's GitHub handler?",
-        name: "engineerGitHub"
+        name: "engineerGitHub",
+        validate: input => {
+          if (input !== "" && input != null) {
+            return true;
+          } else {
+            return "Github repo handler cannot be blank";
+          }
+        }
       }
     ]);
     const newEngineer = new Engineer(
