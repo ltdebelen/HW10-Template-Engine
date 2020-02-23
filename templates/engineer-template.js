@@ -1,33 +1,33 @@
 let htmlString = "";
 
-function buildManagerCard(managers) {
+function buildEngineerCard(engineers) {
   // Loop through to data
-  managers.forEach(manager => {
+  engineers.forEach(engineer => {
     htmlString += `
     <div class="col-lg-4">
     <div class="card border-primary mb-3" style="max-width: 20rem;">
       <div class="card-header">
-        <i class="fa fa-coffee"></i> Manager
+        <i class="fa fa-gears"></i> Engineer
       </div>
       <div class="card-body">
-        <h4 class="card-title">${manager.name}</h4>
+        <h4 class="card-title">${engineer.name}</h4>
         <p class="card-text">
             <ul class="list-group">
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   ID
                   <span class="badge badge-primary badge-pill">${
-                    manager.id
+                    engineer.id
                   }</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                   Email
                   <span class="badge badge-primary badge-pill"><a href="mailto:${
-                    manager.email
-                  }">${manager.email}</a></span>
+                    engineer.email
+                  }">${engineer.email}</a></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Office Number
-                  <span class="badge badge-primary badge-pill">${manager.getOfficeNumber()}</span>
+                  Github
+                  <span class="badge badge-primary badge-pill"><a href="https://github.com/${engineer.getGithub()}" target="_blank">${engineer.getGithub()}</a></span>
                 </li>
             </ul>
         </p>
@@ -40,4 +40,4 @@ function buildManagerCard(managers) {
   return htmlString;
 }
 
-module.exports = { buildManagerCard };
+module.exports = { buildEngineerCard };

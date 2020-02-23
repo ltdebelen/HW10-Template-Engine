@@ -1,10 +1,13 @@
 //  Variables
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const fs = require("fs");
 
 const managerTemplate = require("./templates/manager-template");
+const engineerTemplate = require("./templates/engineer-template");
+const internTemplate = require("./templates/intern-template");
 
 let managers = [];
 let engineers = [];
@@ -24,7 +27,7 @@ async function addManager() {
       },
       {
         type: "input",
-        message: "What's your ID Number?",
+        message: "What is the manager's ID Number?",
         name: "managerID"
       },
       {
@@ -91,9 +94,50 @@ async function addEngineer() {
   buildTeam();
 }
 
+// Prompt for getting intern details
+async function addIntern() {
+  console.log("------INTERN------");
+  try {
+    const response = await inquirer.prompt([
+      {
+        type: "input",
+        message: "What is the Intern's name?",
+        name: "internName"
+      },
+      {
+        type: "input",
+        message: "What is the Intern's ID number?",
+        name: "internId"
+      },
+      {
+        type: "input",
+        message: "What is the Intern's email?",
+        name: "internEmail"
+      },
+      {
+        type: "input",
+        message: "What it the Intern's school?",
+        name: "internSchool"
+      }
+    ]);
+    const newIntern = new Intern(
+      response.internName,
+      response.internId,
+      response.internEmail,
+      response.internSchool
+    );
+    interns.push(newIntern);
+  } catch (err) {
+    console.log(err);
+  }
+  buildTeam();
+}
+
 // Build HTML file for team members
 async function writeHTML(managers, engineers, interns) {
   const managerHTML = managerTemplate.buildManagerCard(managers);
+  const engineerHTML = engineerTemplate.buildEngineerCard(engineers);
+  const internHTML = internTemplate.buildInternCard(interns);
 
   let htmlString = `
   <!DOCTYPE html>
@@ -116,6 +160,10 @@ async function writeHTML(managers, engineers, interns) {
         body {
           font-size: 1.5rem;
         }
+        a {
+          color: #ffffff;
+          text-decoration: none;
+        }
       </style>
     </head>
     <body>
@@ -127,6 +175,8 @@ async function writeHTML(managers, engineers, interns) {
         <div class="container">
           <div class="row">
               ${managerHTML}
+              ${engineerHTML}
+              ${internHTML}
           </div>
         </div>
       </section>
@@ -177,7 +227,7 @@ async function buildTeam() {
         addEngineer();
         break;
       case "Intern":
-        console.log("intern selected");
+        addIntern();
         break;
       case "Done":
         writeHTML(managers, engineers, interns);
