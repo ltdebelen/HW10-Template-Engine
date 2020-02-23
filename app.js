@@ -1,11 +1,20 @@
 //  Variables
 const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
 const inquirer = require("inquirer");
+const fs = require("fs");
 
-let teamMembers = [];
+const managerTemplate = require("./templates/manager-template");
+
+let managers = [];
+let engineers = [];
+let interns = [];
+
+const filename = "./output/team.html";
 
 // Prompt for getting manager details
 async function addManager() {
+  console.log("------MANAGER------");
   try {
     const response = await inquirer.prompt([
       {
@@ -36,34 +45,142 @@ async function addManager() {
       response.managerEmail,
       response.managerOfficeNumber
     );
-    teamMembers.push(newManager);
+    managers.push(newManager);
   } catch (err) {
     console.log(err);
   }
   buildTeam();
 }
 
-// Give options on which member to create and add to the team
+// Prompt for getting engineer details
+async function addEngineer() {
+  console.log("------ENGINEER------");
+  try {
+    const response = await inquirer.prompt([
+      {
+        type: "input",
+        message: "What is the Engineer's name?",
+        name: "engineerName"
+      },
+      {
+        type: "input",
+        message: "What is the Engineer's ID number?",
+        name: "engineerId"
+      },
+      {
+        type: "input",
+        message: "What is the Engineer's email?",
+        name: "engineerEmail"
+      },
+      {
+        type: "input",
+        message: "What it the Engineer's GitHub handler?",
+        name: "engineerGitHub"
+      }
+    ]);
+    const newEngineer = new Engineer(
+      response.engineerName,
+      response.engineerId,
+      response.engineerEmail,
+      response.engineerGitHub
+    );
+    engineers.push(newEngineer);
+  } catch (err) {
+    console.log(err);
+  }
+  buildTeam();
+}
 
+// Build HTML file for team members
+async function writeHTML(managers, engineers, interns) {
+  const managerHTML = managerTemplate.buildManagerCard(managers);
+
+  let htmlString = `
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>My Team</title>
+      <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/sketchy/bootstrap.min.css"
+      />
+      <link
+        href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+        crossorigin="anonymous"
+      />
+      <style>
+        body {
+          font-size: 1.5rem;
+        }
+      </style>
+    </head>
+    <body>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+        <a class="navbar-brand m-auto" href="#">My Team</a>
+      </nav>
+  
+      <section id="team-members">
+        <div class="container">
+          <div class="row">
+              ${managerHTML}
+          </div>
+        </div>
+      </section>
+  
+      <script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"
+      ></script>
+      <script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"
+      ></script>
+    </body>
+  </html>
+  `;
+  fs.writeFile(filename, htmlString, function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Team HTML File created");
+    }
+  });
+}
+
+// Give options on which member to create.
 async function buildTeam() {
   try {
     const response = await inquirer.prompt([
       {
         type: "list",
-        message: "Let's create your team! Please select from the options below",
+        message: "Add another member? Please select from the options below",
         name: "memberType",
-        choices: ["Engineer", "Intern", "Done"]
+        choices: ["Manager", "Engineer", "Intern", "Done"]
       }
     ]);
     switch (response.memberType) {
+      case "Manager":
+        addManager();
+        break;
       case "Engineer":
-        console.log("Engineer selected");
+        addEngineer();
         break;
       case "Intern":
         console.log("intern selected");
         break;
       case "Done":
-        console.log("Generate HTML");
+        writeHTML(managers, engineers, interns);
         break;
     }
   } catch (err) {
