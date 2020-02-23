@@ -23,22 +23,53 @@ async function addManager() {
       {
         type: "input",
         message: "What is the manager's name?",
-        name: "managerName"
+        name: "managerName",
+        validate: input => {
+          if (input !== "" && input != null) {
+            return true;
+          } else {
+            return "Manager's name cannot be blank";
+          }
+        }
       },
       {
         type: "input",
         message: "What is the manager's ID Number?",
-        name: "managerID"
+        name: "managerID",
+        validate: input => {
+          if (input !== "" && !isNaN(input)) {
+            return true;
+          } else {
+            return "Please enter a number";
+          }
+        }
       },
       {
         type: "input",
         message: "What's your manager's email?",
-        name: "managerEmail"
+        name: "managerEmail",
+        validate: input => {
+          if (
+            input !== "" &&
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input)
+          ) {
+            return true;
+          } else {
+            return "Please enter a valid email address";
+          }
+        }
       },
       {
         type: "input",
         message: "What's your manager's office number?",
-        name: "managerOfficeNumber"
+        name: "managerOfficeNumber",
+        validate: input => {
+          if (input !== "" && !isNaN(input)) {
+            return true;
+          } else {
+            return "Please enter a number";
+          }
+        }
       }
     ]);
 
