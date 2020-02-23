@@ -26,7 +26,7 @@ function buildInternCard(interns) {
                   }">${intern.email}</a></span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                  Github
+                  School
                   <span class="badge badge-primary badge-pill">${intern.getSchool()}</span>
                 </li>
             </ul>
